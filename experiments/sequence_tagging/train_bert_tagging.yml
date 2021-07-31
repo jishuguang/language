@@ -1,0 +1,45 @@
+save:
+  dir: D:\data\train\bert\tagging
+
+model:
+  name: bert
+  embedding_dim: 128
+  feedforward_dim: 128
+  max_len: &max_len 128
+  num_layers: 4
+  num_heads: 4
+  dropout: 0.1
+
+pretrain:
+  load: D:\data\train\bert\tagging\20210731221430\model\model_best.pth
+#  resume:
+#  bert: D:\data\train\bert\wikitext2\20210725213942\word_embedding.pt
+
+data:
+  type: sequence
+  name: conll
+  data_path: D:\data\origin
+  vocab_path: D:\data\vocab\wikitext2_bert_vocab.pt
+  tag_vocab_path: D:\data\vocab\conll_tag_vocab.pt
+  min_freq: 10
+  specials: ['<unk>', '<mask>', '<cls>', '<sep>', '<pad>']
+  ignore_case: True
+  max_len: *max_len
+
+trainer:
+  device:
+    name: 'cuda:0'
+    batch_size: 128
+    num_worker: 0
+  learn:
+    method: Adam
+    lr: 0.001
+    epochs: 20
+    milestones: [14]
+  key_metric: f1score
+
+evaluator:
+  device:
+    name: 'cuda:0'
+    batch_size: 128
+    num_worker: 0
