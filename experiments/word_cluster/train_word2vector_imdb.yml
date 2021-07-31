@@ -1,0 +1,32 @@
+save:
+  dir: D:\data\train\imdb
+
+model:
+  name: skip_gram
+  embedding_dim: 128
+
+pretrain:
+#  load:
+#  resume:
+
+data:
+  type: word2vector
+  name: imdb
+  data_path: D:\data\origin
+  vocab_path: D:\data\vocab\imdb_vocab.pt
+  min_freq: 10
+  specials: ['<unk>']
+  ignore_case: True
+  window: 5
+  negative_amount: 5
+
+trainer:
+  device:
+    name: 'cuda:0'
+    batch_size: 512
+    num_worker: 0  # investigate why this should be 0
+  learn:
+    method: Adam
+    lr: 0.01
+    epochs: 10
+    milestones: [4,8]

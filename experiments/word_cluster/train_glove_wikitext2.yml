@@ -1,0 +1,33 @@
+save:
+  dir: D:\data\train\glove\wikitext2
+
+model:
+  name: glove
+  embedding_dim: 128
+  c: 100
+  alpha: 0.75
+
+pretrain:
+  load: D:\data\train\glove\wikitext2\20210715010931\model\model_best.pth
+#  resume:
+
+data:
+  type: glove
+  name: wikitext2
+  data_path: D:\data\origin
+  vocab_path: D:\data\vocab\wikitext2_vocab.pt
+  min_freq: 10
+  specials: ['<unk>']
+  ignore_case: True
+  window: 5
+
+trainer:
+  device:
+    name: 'cuda:0'
+    batch_size: 512
+    num_worker: 0
+  learn:
+    method: Adam
+    lr: 0.001
+    epochs: 10
+    milestones: [6]
