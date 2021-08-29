@@ -1,0 +1,37 @@
+save:
+  dir: D:\data\train\bert\squad2
+
+model:
+  name: bert
+  embedding_dim: 128
+  feedforward_dim: 128
+  max_len: &max_len 128
+  num_layers: 4
+  num_heads: 4
+  dropout: 0.1
+  num_dim_lm: 128
+
+pretrain:
+#  load:
+#  resume:
+
+data:
+  type: bert
+  name: squad2
+  data_path: D:\data\origin
+  vocab_path: D:\data\vocab\squad2_bert_vocab.pt
+  min_freq: 10
+  specials: ['<unk>', '<mask>', '<cls>', '<sep>', '<pad>']
+  ignore_case: True
+  max_len: *max_len
+
+trainer:
+  device:
+    name: 'cuda:0'
+    batch_size: 32
+    num_worker: 0
+  learn:
+    method: Adam
+    lr: 0.001
+    epochs: 3
+    milestones: [1, 2]

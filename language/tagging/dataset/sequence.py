@@ -23,6 +23,7 @@ class SequenceDataset(Dataset):
         :param vocab_path: path to vocab file.
         :param min_freq: minimum frequency.
         :param specials: List[str], special symbols to add.
+        :param tag_vocab_path: path to tag vocab.
         :param max_len: max length of sentence.
         """
         super().__init__()
@@ -90,7 +91,7 @@ class SequenceDataset(Dataset):
         return {key: data[index] for key, data in self._data.items()}
 
     def __len__(self):
-        return len(self._data['tokens'])
+        return self._data['tokens'].shape[0]
 
     def get_tag_vocab(self):
         return self._tag_vocab

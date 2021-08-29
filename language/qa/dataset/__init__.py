@@ -1,4 +1,4 @@
-from .sequence import build_sequence_dataset
+from .extractive import build_extractive_dataset
 from language.utils.log import get_logger
 
 
@@ -6,7 +6,7 @@ logger = get_logger()
 
 
 DATASET_TYPES = {
-    'sequence': build_sequence_dataset
+    'extractive': build_extractive_dataset
 }
 
 

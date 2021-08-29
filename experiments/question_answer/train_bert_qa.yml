@@ -1,0 +1,49 @@
+save:
+  dir: D:\data\train\bert\qa
+
+model:
+  name: bert
+  embedding_dim: 128
+  feedforward_dim: 128
+  max_len: &max_len 128
+  num_layers: 4
+  num_heads: 4
+  dropout: 0.1
+
+pretrain:
+  load: D:\data\train\bert\qa\20210827190645\model\model_best.pth
+#  resume:
+#  bert: D:\data\train\bert\wikitext2\20210725213942\word_embedding.pt
+#  bert: D:\data\train\bert\squad2\20210825214616\word_embedding.pt
+
+data:
+  type: extractive
+  name: squad2
+  data_path: D:\data\origin
+  tokenizer: basic_english
+  vocab_path: D:\data\vocab\wikitext2_bert_vocab.pt
+#  vocab_path: D:\data\vocab\squad2_bert_vocab.pt
+  min_freq: 10
+  specials: ['<unk>', '<mask>', '<cls>', '<sep>', '<pad>']
+  max_len: *max_len
+
+trainer:
+  device:
+    name: 'cuda:0'
+    batch_size: 64
+    num_worker: 0
+  learn:
+    method: Adam
+    lr: 0.0001
+    weight_decay: 0.0001
+    epochs: 80
+    milestones: [50, 65, 75]
+    gamma: 0.5
+  key_metric: EM
+
+evaluator:
+  impossible: True
+  device:
+    name: 'cuda:0'
+    batch_size: 128
+    num_worker: 0

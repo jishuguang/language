@@ -105,7 +105,7 @@ class BertDataset(Dataset):
     def _setup_data(sentence_pair_data, vocab):
         """
         Setup data for bert training.
-        :param sentence_pair_data: dict.
+        :param sentence_pair_data: List[dict].
         :param vocab: torchtext.vocab.Vocab
         :return: List[dict].
         """
@@ -138,9 +138,10 @@ class BertDataset(Dataset):
                 tokens[index] = masked_token
                 index_predict.append(index)
                 token_predict.append(masked_token)
-                data['tokens'] = tokens
-                data['predict_index'] = index_predict
-                data['predict_token'] = token_predict
+
+            data['tokens'] = tokens
+            data['predict_index'] = index_predict
+            data['predict_token'] = token_predict
         return sentence_pair_data
 
     def __getitem__(self, index):
@@ -200,9 +201,32 @@ class WikiText2Test(WikiText2):
         return paragraphs[:1024]
 
 
+class Squad2(BertDataset):
+    """Squad2 dataset for bert embedding training."""
+
+    def _get_raw_paragraphs(self, data_path, **kwargs):
+        paragraphs = list()
+        tokenizer = torchtext.data.utils.get_tokenizer('basic_english')
+        # use train split only
+        for passage, question, _, _ in tqdm(torchtext.datasets.SQuAD2(data_path, split='train')):
+            passage_list = [passage]
+            for char in '.!?':
+                new_passage_list = list()
+                for p in passage_list:
+                    new_p_list = p.split(char)
+                    for new_p in new_p_list[:-1]:
+                        new_p += char
+                    new_passage_list.extend(new_p_list)
+                passage_list = new_passage_list
+            paragraphs.append([tokenizer(p) for p in [question] + passage_list])
+
+        return paragraphs
+
+
 DATASETS = {
     'wikitext2_test': WikiText2Test,
-    'wikitext2': WikiText2
+    'wikitext2': WikiText2,
+    'squad2': Squad2
 }
 
 
